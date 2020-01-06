@@ -27,6 +27,16 @@ class ViewController: NSViewController {
             print(ter.paragraph)
             print("end")
         }
+        
+        TerminalKit("ls -al").launch(onRunning: { ter in
+            // When the script is working
+        }) { ter in
+            // When the script is complete
+        }
+        
+        TerminalKit(["ls -al", "ls -al", "ls -al"]).launch { ter in
+            // When the script is complete
+        }
     }
 
     override var representedObject: Any? {
