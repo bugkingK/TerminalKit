@@ -33,6 +33,11 @@ TerminalKit("ls -al").launch(onRunning: { ter in
 }) { ter in
     // When the script is complete
 }
+
+// You want to run multiple scripts.
+TerminalKit(["ls -al", "ls -al", "ls -al"]).launch { ter in
+    // When the script is complete
+}
 ```
 
 ## License
