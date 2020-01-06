@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import TerminalKit
 
 class ViewController: NSViewController {
 
@@ -14,6 +15,18 @@ class ViewController: NSViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        TerminalKit("ls -al").launch { (ter) in
+            if let output = ter.output {
+                print(output)
+            }
+            
+            if let errput = ter.errput {
+                print(errput)
+            }
+            
+            print(ter.paragraph)
+            print("end")
+        }
     }
 
     override var representedObject: Any? {
