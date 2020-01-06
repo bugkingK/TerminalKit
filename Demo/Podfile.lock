@@ -1,0 +1,16 @@
+PODS:
+  - TerminalKit (0.0.1)
+
+DEPENDENCIES:
+  - TerminalKit
+
+SPEC REPOS:
+  trunk:
+    - TerminalKit
+
+SPEC CHECKSUMS:
+  TerminalKit: dd5dde2f6ae6f97fbbd16e967a9b024ab09d2372
+
+PODFILE CHECKSUM: 3e4089ea9ff47beeeffb61938e6950e164a955a2
+
+COCOAPODS: 1.8.4
