@@ -31,15 +31,15 @@ public class TerminalKit {
     
     public var paragraph:String = ""
     
-    private init() {
+    private init(_ launchPath:String?="/bin/sh") {
         self.task = Process()
-        self.task.launchPath = "/bin/sh"
+        self.task.launchPath = launchPath
     }
     
-    public convenience init(_ command:String, isWaitUntilExit:Bool=true) {
-        self.init()
+    public convenience init(_ command:String, launchPath:String?=nil, isWaitUntilExit:Bool=true) {
+        self.init(launchPath)
         self.commands = [command]
-        self.setCommand()
+        self.setCommand(isWaitUntilExit)
     }
     
     public convenience init(_ commands:[String]) {
