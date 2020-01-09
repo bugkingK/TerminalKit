@@ -5,18 +5,15 @@ import PackageDescription
 
 let package = Package(
     name: "TerminalKit",
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-//         .package(url: "https://github.com/bugkingK/TerminalKit", from: "0.0.2"),
+    platforms: [
+        .macOS(.v10_10)
+    ],
+    products: [
+        .library(name: "TerminalKit", targets: ["TerminalKit"])
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages which this package depends on.
-        .target(
-            name: "TerminalKit",
-            dependencies: []),
-        .testTarget(
-            name: "TerminalKitTests",
-            dependencies: ["TerminalKit"]),
-    ]
+        .target(name: "TerminalKit", dependencies: []),
+        .testTarget(name: "TerminalKitTests", dependencies: ["TerminalKit"])
+    ],
+    swiftLanguageVersions: [.v5]
 )
