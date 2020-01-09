@@ -15,6 +15,7 @@ class ViewController: NSViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        TerminalKit("ls -al").launch()
         TerminalKit("ls -al").launch { (ter) in
             if let output = ter.output {
                 print(output)

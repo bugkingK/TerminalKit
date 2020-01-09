@@ -1,6 +1,0 @@
-framework module TerminalKit {
-  umbrella header "TerminalKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -31,9 +31,9 @@ public class TerminalKit {
     
     public var paragraph:String = ""
     
-    private init(_ launchPath:String?="/bin/sh") {
+    private init(_ launchPath:String?) {
         self.task = Process()
-        self.task.launchPath = launchPath
+        self.task.launchPath = launchPath == nil ? "/bin/sh" : launchPath
     }
     
     public convenience init(_ command:String, launchPath:String?=nil, isWaitUntilExit:Bool=true) {
@@ -43,7 +43,7 @@ public class TerminalKit {
     }
     
     public convenience init(_ commands:[String]) {
-        self.init()
+        self.init(nil)
         self.commands = commands
         self.setCommand()
     }
@@ -77,7 +77,7 @@ extension TerminalKit {
         }
     }
         
-    public func launch(onTerminate:Handler?) {
+    public func launch(_ onTerminate:Handler?=nil) {
         let outPipe = Pipe()
         let errPipe = Pipe()
         task.standardOutput = outPipe

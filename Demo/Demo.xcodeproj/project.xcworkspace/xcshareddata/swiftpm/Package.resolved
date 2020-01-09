@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "TerminalKit",
+        "repositoryURL": "https://github.com/bugkingK/TerminalKit",
+        "state": {
+          "branch": null,
+          "revision": "c58ff98d5f8e787f498222935ecfed9d9ce1da36",
+          "version": "1.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "TerminalKit"
-  s.version      = "0.0.1"
+  s.version      = "1.0.2"
   s.summary      = "‘TerminalKit’ makes it easy to process scripts."
   s.description  = <<-DESC
 ‘TerminalKit’ makes it easy to process scripts.
