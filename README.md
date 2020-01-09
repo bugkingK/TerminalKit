@@ -11,6 +11,22 @@ pod 'TerminalKit'
 Copy <i>TerminalKit.swift</i> to your project.
 </pre>
 
+<b>Swift Package Manager:</b>
+
+You can use [The Swift Package Manager](https://swift.org/package-manager) to install `TerminalKit` by adding the proper description to your `Package.swift` file:
+
+```swift
+
+let package = Package(
+    name: "YOUR_PROJECT_NAME",
+    dependencies: [
+        .package(url: "https://github.com/bugkingK/TerminalKit.git", from: "1.0.1"),
+    ]
+)
+```
+Then run `swift build` whenever you get prepared.
+
+
 ## Using TerminalKit
 ```swift
 // When checking the script for completion only.
