@@ -1,58 +1,39 @@
 //
 //  TerminalKit.swift
-//  TerminalKit
 //
-//  Created by Banaple on 2020/01/06.
-//  Copyright © 2020 BUGKING. All rights reserved.
+//
+//  Created by Kimun Kwon on 2021/06/24.
 //
 
 import Foundation
 
-public typealias Handler = (TerminalKit)->()
+public typealias Handler = ((output: String?, errput: String?))->()
 
 public class TerminalKit {
-    private var commands:[String]!
-    private var queuePoint:Int = 0
-    public var task:Process!
-    public var output:String? {
-        didSet {
-            if output != nil {
-                self.paragraph.append(output!)
-            }
-        }
-    }
-    public var errput:String? {
-        didSet {
-            if errput != nil {
-                self.paragraph.append(errput!)
-            }
-        }
-    }
+    private var commands: [String]
+    private var task: Process
     
-    public var paragraph:String = ""
-    
-    private init(_ launchPath:String?) {
+    private init(_ launchPath: String?) {
         self.task = Process()
         self.task.launchPath = launchPath == nil ? "/bin/sh" : launchPath
+        self.commands = []
     }
     
-    public convenience init(_ command:String, launchPath:String?=nil, isWaitUntilExit:Bool=true) {
+    public convenience init(_ command: String, launchPath: String? = nil, isWaitUntilExit: Bool = true) {
         self.init(launchPath)
         self.commands = [command]
         self.setCommand(isWaitUntilExit)
     }
     
-    public convenience init(_ commands:[String]) {
-        self.init(nil)
+    public convenience init(_ commands: [String], launchPath: String? = nil, isWaitUntilExit: Bool = true) {
+        self.init(launchPath)
         self.commands = commands
-        self.setCommand()
+        self.setCommand(isWaitUntilExit)
     }
     
-    private func setCommand(_ isWaitUntilExit:Bool=true) {
+    private func setCommand(_ isWaitUntilExit: Bool) {
         let command = String(self.commands.flatMap { $0 + "&&" }.dropLast(2))
         self.task.arguments = ["-c", command]
-        self.output = nil
-        self.errput = nil
         if isWaitUntilExit {
             self.task.waitUntilExit()
         }
@@ -76,46 +57,51 @@ extension TerminalKit {
             self.task.launch()
         }
     }
-        
-    public func launch(_ onTerminate:Handler?=nil) {
+    
+    /// Invoked when the task is completed.
+    public func launch(_ onCompleted: Handler? = nil) {
         let outPipe = Pipe()
         let errPipe = Pipe()
         task.standardOutput = outPipe
         task.standardError = errPipe
         
         self.task.terminationHandler = { _ in
-            self.output = self.readPipe(outPipe, false)
-            self.errput = self.readPipe(errPipe, false)
-            onTerminate?(self)
+            let output = self.readPipe(outPipe, false)
+            let errput = self.readPipe(errPipe, false)
+            outPipe.fileHandleForReading.closeFile()
+            errPipe.fileHandleForReading.closeFile()
+            onCompleted?((output, errput))
         }
         
         self.launch()
     }
     
-    public func launch(onRunning:Handler?, onTerminate:Handler?) {
+    public func launch(onNext: Handler?, onCompleted: Handler?) {
         let outPipe = Pipe()
         let errPipe = Pipe()
+        var fullOutput: String = ""
+        var fullErrput: String = ""
         task.standardOutput = outPipe
         task.standardError = errPipe
         
-        outPipe.fileHandleForReading.readabilityHandler = { pipe in
-            self.output = self.readPipe(outPipe, true)
-            self.errput = nil
-            onRunning?(self)
+        outPipe.fileHandleForReading.readabilityHandler = { _ in
+            if let output: String = self.readPipe(outPipe, true) {
+                fullOutput.append(output)
+                onNext?((output, nil))
+            }
         }
         
-        errPipe.fileHandleForReading.readabilityHandler = { pipe in
-            self.output = nil
-            self.errput = self.readPipe(errPipe, true)
-            onRunning?(self)
+        errPipe.fileHandleForReading.readabilityHandler = { _ in
+            if let errput: String = self.readPipe(errPipe, true) {
+                fullErrput.append(errput)
+                onNext?((nil, errput))
+            }
         }
         
         task.terminationHandler = { _ in
             outPipe.fileHandleForReading.closeFile()
             errPipe.fileHandleForReading.closeFile()
-            self.output = nil
-            self.errput = nil
-            onTerminate?(self)
+            onCompleted?((fullOutput, fullErrput))
         }
         
         self.launch()
